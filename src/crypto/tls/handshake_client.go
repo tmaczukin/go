@@ -285,10 +285,11 @@ func (hs *clientHandshakeState) doFullHandshake() error {
 
 		if !c.config.InsecureSkipVerify {
 			opts := x509.VerifyOptions{
-				Roots:         c.config.RootCAs,
-				CurrentTime:   c.config.time(),
-				DNSName:       c.config.ServerName,
-				Intermediates: x509.NewCertPool(),
+				Roots:              c.config.RootCAs,
+				CurrentTime:        c.config.time(),
+				DNSName:            c.config.ServerName,
+				Intermediates:      x509.NewCertPool(),
+				VerifySelfOnlyIfCA: c.config.VerifySelfOnlyIfCA,
 			}
 
 			for i, cert := range certs {

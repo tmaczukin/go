@@ -156,6 +156,10 @@ type VerifyOptions struct {
 	// constraint down the chain which mirrors Windows CryptoAPI behavior,
 	// but not the spec. To accept any key usage, include ExtKeyUsageAny.
 	KeyUsages []ExtKeyUsage
+
+	// VerifySelfOnlyIfCA determines wheter certificate should be verified
+	// directly by itself only when it's a CA (self-signed) certificate.
+	VerifySelfOnlyIfCA bool
 }
 
 const (
@@ -309,7 +313,7 @@ func (c *Certificate) Verify(opts VerifyOptions) (chains [][]*Certificate, err e
 	}
 
 	var candidateChains [][]*Certificate
-	if opts.Roots.contains(c) {
+	if (!opts.VerifySelfOnlyIfCA || c.IsCA) && opts.Roots.contains(c) {
 		candidateChains = append(candidateChains, []*Certificate{c})
 	} else {
 		if candidateChains, err = c.buildChains(make(map[int][][]*Certificate), []*Certificate{c}, &opts); err != nil {

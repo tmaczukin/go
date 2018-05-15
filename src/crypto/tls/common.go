@@ -516,6 +516,10 @@ type Config struct {
 	// for new tickets and any subsequent keys can be used to decrypt old
 	// tickets.
 	sessionTicketKeys []ticketKey
+
+	// VerifySelfOnlyIfCA determines wheter certificate should be verified
+	// directly by itself only when it's a CA (self-signed) certificate.
+	VerifySelfOnlyIfCA bool
 }
 
 // ticketKeyNameLen is the number of bytes of identifier that is prepended to
@@ -581,6 +585,7 @@ func (c *Config) Clone() *Config {
 		Renegotiation:               c.Renegotiation,
 		KeyLogWriter:                c.KeyLogWriter,
 		sessionTicketKeys:           sessionTicketKeys,
+		VerifySelfOnlyIfCA:          c.VerifySelfOnlyIfCA,
 	}
 }
 
